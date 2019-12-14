@@ -10,8 +10,8 @@ class txCloud(object):
     def __init__(self):
 
 
-        secret_id = TX_SECRET_ID  # 替换为用户的 secretId
-        secret_key = TX_SECRET_KEY # 替换为用户的 secretKey
+        self.secret_id = TX_SECRET_ID  # 替换为用户的 secretId
+        self.secret_key = TX_SECRET_KEY # 替换为用户的 secretKey
         region = 'ap-shanghai'  # 替换为用户的 Region
         token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
         scheme = 'https'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
