@@ -26,7 +26,7 @@ class GoodsCateGory(models.Model):
     updtime = models.BigIntegerField(default=0,blank=True)
 
     istheme = models.CharField(max_length=1, default="1",verbose_name="是否主题,0-是,1-否",null=True,blank=True)
-    isstart = models.CharField(max_length=1, default="1",verbose_name="是否生效,0-是,1-否",null=True,blank=True)
+    isstart = models.CharField(max_length=1, default="0",verbose_name="是否生效,0-是,1-否",null=True,blank=True)
     url1 = models.CharField(max_length=255, verbose_name="首页封面图", default='', null=True,blank=True)
     url2 = models.CharField(max_length=255, verbose_name="分类封面图", default='', null=True,blank=True)
 
