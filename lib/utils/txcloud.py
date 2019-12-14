@@ -12,10 +12,10 @@ class txCloud(object):
 
         self.secret_id = TX_SECRET_ID  # 替换为用户的 secretId
         self.secret_key = TX_SECRET_KEY # 替换为用户的 secretKey
-        region = 'ap-shanghai'  # 替换为用户的 Region
+        self.region = 'ap-shanghai'  # 替换为用户的 Region
         token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
         scheme = 'https'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
-        config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
+        config = CosConfig(Region=self.region, SecretId=self.secret_id, SecretKey=self.secret_key, Token=token, Scheme=scheme)
         self.client = CosS3Client(config)
 
     def run(self):
@@ -34,7 +34,7 @@ class txCloud(object):
             # 换成你的 bucket
             'bucket': 'yijingxisui-1254541031',
             # 换成 bucket 所在地区
-            'region': 'ap-shanghai',
+            'region':  self.region,
             # 这里改成允许的路径前缀，可以根据自己网站的用户登录态判断允许上传的具体路径
             # 例子： a.jpg 或者 a/* 或者 * (使用通配符*存在重大安全风险, 请谨慎评估使用)
             'allow_prefix': '*',
