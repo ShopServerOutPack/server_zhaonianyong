@@ -15,6 +15,7 @@ from app.cache.utils import RedisCaCheHandler
 from lib.utils.WXBizDataCrypt import WXBizDataCrypt
 
 from app.idGenerator import idGenerator
+from app.user.serialiers import UsersSerializers
 from lib.utils.txcloud import txCloud
 from project.config_include.params import WECHAT_SECRET,WECHAT_APPID
 
@@ -29,20 +30,30 @@ class SsoAPIView(viewsets.ViewSet):
             secret=WECHAT_SECRET,
             grant_type="authorization_code",
         )
-        res = send_request_other(
+        wechat_res = send_request_other(
             url="https://api.weixin.qq.com/sns/jscode2session",
             params=params)
-        if not res.get("openid"):
+        if not wechat_res.get("openid"):
             raise PubErrorCustom("获取用户错误,腾讯接口有误!")
-        print(res)
-        try:
-            data = UserModelSerializerToRedis(Users.objects.get(uuid=res.get('openid')), many=False).data
-        except Users.DoesNotExist:
-            data = {}
+        print(wechat_res)
 
-        return {"data": {
-            "user": data if data else {},
-            "session_key": res.get("session_key")
+        data={}
+        token=False
+        try:
+            user=Users.objects.get(uuid=wechat_res.get('openid'))
+            data = UsersSerializers(user,many=False).data
+
+            token = get_token()
+            res = UserModelSerializerToRedis(user, many=False).data
+            RedisTokenHandler(key=token).redis_dict_set(res)
+
+        except Users.DoesNotExist:
+            pass
+
+        return {"data":{
+            "user" : data,
+            "session_key":wechat_res.get("session_key"),
+            "token":token
         }}
 
     @list_route(methods=['POST'])
@@ -60,11 +71,12 @@ class SsoAPIView(viewsets.ViewSet):
         res = pc.decrypt(encryptedData, iv)
 
         try:
-            obj = UserModelSerializerToRedis(Users.objects.get(uuid=res.get('openId') if 'unionId' not in res else res['unionId']),many=False).data
+            user = UserModelSerializerToRedis(Users.objects.get(uuid=res.get('openId') if 'unionId' not in res else res['unionId']),many=False).data
         except Users.DoesNotExist:
             user = Users.objects.create(**{
                 "userid": idGenerator.userid('4001'),
                 "uuid": res.get('openId') if 'unionId' not in res else res['unionId'],
+                "mobile": res.get('openId') if 'unionId' not in res else res['unionId'],
                 "rolecode": '4001',
                 "name": res.get("nickName"),
                 "sex": res.get("sex"),
@@ -72,19 +84,14 @@ class SsoAPIView(viewsets.ViewSet):
                 "pic": res.get("avatarUrl"),
                 "appid": res.get("watermark")['appid']
             })
-            obj = RedisCaCheHandler(
-                method="save",
-                serialiers="UserModelSerializerToRedis",
-                table="user",
-                filter_value=user,
-                must_key="userid",
-            ).run()
-
-
-        return {"data":{
-            "user" : obj
+        token = get_token()
+        res = UserModelSerializerToRedis(user, many=False).data
+        RedisTokenHandler(key=token).redis_dict_set(res)
+        print(token)
+        return {"data": {
+            "user": UsersSerializers(user, many=False).data,
+            "token": token
         }}
-
 
     @list_route(methods=['POST'])
     @Core_connector(isTransaction=True,isPasswd=True)

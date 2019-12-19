@@ -4,7 +4,7 @@ import os
 
 DBHOST = os.environ.get('DBHOST', 'localhost')
 DBPORT = os.environ.get('DBPORT', '3306')
-DBNAME = os.environ.get('DBNAME', 'shop')
+DBNAME = os.environ.get('DBNAME', 'shop1')
 DBUSER = os.environ.get('DBUSER', 'root')
 DBPASS = os.environ.get('DBPASS', '123456')
 

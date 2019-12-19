@@ -18,6 +18,7 @@ from .goods import urls as goods_urls
 from .sys import urls as sys_urls
 from .file import urls as file_urls
 from .public import urls as public_urls
+from .order import urls as order_urls
 
 urlpatterns = [
     path('sso/', include(sso_urls)),
@@ -27,4 +28,5 @@ urlpatterns = [
     path('sys/', include(sys_urls)),
     path('file/', include(file_urls)),
     path('public/', include(public_urls)),
+    path('order/', include(order_urls)),
 ]

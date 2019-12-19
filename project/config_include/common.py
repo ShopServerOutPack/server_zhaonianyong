@@ -16,6 +16,7 @@ INSTALLED_APPS_CUSTOM = [
     'app.user',
     'app.sys',
     'app.file',
+    'app.order',
     'app.cache',
     'app.public',
     'app.goods',

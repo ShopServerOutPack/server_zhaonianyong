@@ -24,11 +24,15 @@ class GoodsAPIView(viewsets.ViewSet):
         print(request.data_format)
         try:
             user = Users.objects.get(userid=request.user.get("userid"))
-            user.isvip = 1
-            user.save()
+            # user.isvip = 1
+            # user.save()
         except Users.DoesNotExist:
             raise PubErrorCustom("用户不存在!")
-        return {"data":user.isvip}
+        # return {"data":user.isvip}
+
+        # wechatPay().request({
+        #
+        # })
 
         # return  {"data":RecursionForModle(
         #     headObj=GoodsCateGory.objects.get(gdcgid=1),
@@ -143,3 +147,10 @@ class GoodsAPIView(viewsets.ViewSet):
             must_key_value=request.data_format.get('gdid')).run()
 
         return None
+
+
+    @list_route(methods=['POST'])
+    @Core_connector(isTransaction=True)
+    def callBackWechatPay(self,request,*args, **kwargs):
+
+        pass
