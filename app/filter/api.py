@@ -5,6 +5,7 @@ from rest_framework.decorators import list_route
 from lib.core.decorator.response import Core_connector
 
 from app.cache.utils import RedisCaCheHandler
+from app.public.models import Sysparams
 
 class FilterAPIView(viewsets.ViewSet):
 
@@ -278,7 +279,8 @@ class FilterAPIView(viewsets.ViewSet):
         rdata={
             "banners":[],
             "category":[],
-            "active":0
+            "active":0,
+            "type":Sysparams.objects.get(id=1).pushtype
         }
 
         #轮播图数据

@@ -81,3 +81,19 @@ class OtherMemo(models.Model):
         verbose_name = '公告联系我们'
         verbose_name_plural = verbose_name
         db_table = 'othermemo'
+
+class Sysparams(models.Model):
+
+    id=models.AutoField(primary_key=True)
+    pushtype = models.CharField(max_length=1,verbose_name="小程序发布状态:0-开发,1-审核,2-上线",default="0")
+
+
+    def save(self, *args, **kwargs):
+        if not self.createtime:
+            self.createtime = UtilTime().timestamp
+        return super(Sysparams, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = '参数'
+        verbose_name_plural = verbose_name
+        db_table = 'sysparams'
