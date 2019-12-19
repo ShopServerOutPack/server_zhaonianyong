@@ -70,10 +70,11 @@ class wechatPay(object):
                 "nonceStr": data['nonce_str'],
                 "package": "prepay_id=" + prepay_id,
                 "signType": 'MD5',
-                "timeStamp": timeStamp,
-                "orderid":request_data['out_trade_no']
+                "timeStamp": timeStamp
             }
             data['paySign']=self.hashdata(data, WECHAT_PAY_KEY)
+
+            data["orderid"] = request_data['out_trade_no']
 
             return data
         else:
