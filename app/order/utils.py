@@ -57,10 +57,10 @@ class wechatPay(object):
 
         if xmlmsg['xml']['return_code'] == 'SUCCESS':
 
-            sign = self.hashdata(xmlmsg['xml'], WECHAT_PAY_KEY)
-
-            if sign != xmlmsg['xml']['sign']:
-                raise PubErrorCustom("非法操作！")
+            # sign = self.hashdata(xmlmsg['xml'], WECHAT_PAY_KEY)
+            #
+            # if sign != xmlmsg['xml']['sign']:
+            #     raise PubErrorCustom("非法操作！")
 
             prepay_id = xmlmsg['xml']['prepay_id']
             timeStamp = str(int(time.time()))
@@ -130,7 +130,8 @@ class wechatPay(object):
 
         if xmlmsg['xml']['return_code'] == 'SUCCESS':
             sign = self.hashdata(xmlmsg['xml'], WECHAT_PAY_KEY)
-
+            print(sign)
+            print(xmlmsg['xml'])
             if sign != xmlmsg['xml']['sign']:
                 raise PubErrorCustom("非法操作！")
 
