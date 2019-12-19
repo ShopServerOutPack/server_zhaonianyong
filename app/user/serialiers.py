@@ -8,3 +8,4 @@ class UsersSerializers(serializers.Serializer):
     userid = serializers.IntegerField()
     pic = serializers.CharField()
     name = serializers.CharField()
+    isvip = serializers.CharField()
