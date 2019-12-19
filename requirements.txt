@@ -14,7 +14,10 @@ redis
 arrow
 demjson
 django_crontab
+geoip2
 xmltodict
+pyotp
+cryptokit
 cos-python-sdk-v5
 tencentcloud-sdk-python
 qcloud-python-sts
