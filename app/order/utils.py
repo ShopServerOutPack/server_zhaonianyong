@@ -57,10 +57,10 @@ class wechatPay(object):
 
         if xmlmsg['xml']['return_code'] == 'SUCCESS':
 
-            # sign = self.hashdata(xmlmsg['xml'], WECHAT_PAY_KEY)
-            #
-            # if sign != xmlmsg['xml']['sign']:
-            #     raise PubErrorCustom("非法操作！")
+            sign = self.hashdata(xmlmsg['xml'], WECHAT_PAY_KEY)
+
+            if sign != xmlmsg['xml']['sign']:
+                raise PubErrorCustom("非法操作！")
 
             prepay_id = xmlmsg['xml']['prepay_id']
             timeStamp = str(int(time.time()))
@@ -95,19 +95,23 @@ class wechatPay(object):
                 print(sign)
                 raise Exception("非法操作！")
 
-            out_trade_no = xmlmsg['xml']['out_trade_no']
-            total_fee = xmlmsg['xml']['total_fee']
+            if  xmlmsg['xml']['result_code'] == 'SUCCESS':
+                out_trade_no = xmlmsg['xml']['out_trade_no']
+                total_fee = xmlmsg['xml']['total_fee']
 
-            order = Order.objects.select_for_update().get(orderid=out_trade_no)
-            if float(order.amount)*100 != float(total_fee):
-                raise Exception("金额不一致")
-            order.paymsg = json.dumps(xmlmsg['xml'])
-            order.status=1
-            order.save()
 
-            user = Users.objects.select_for_update().get(userid=order.userid)
-            user.isvip = '1'
-            user.save()
+                order = Order.objects.select_for_update().get(orderid=out_trade_no)
+                if float(order.amount)*100 != float(total_fee):
+                    raise Exception("金额不一致")
+                order.paymsg = json.dumps(xmlmsg['xml'])
+                order.status=1
+                order.save()
+
+                user = Users.objects.select_for_update().get(userid=order.userid)
+                user.isvip = '1'
+                user.save()
+            else:
+                raise Exception("error")
         else:
             raise Exception("error")
 
@@ -129,11 +133,11 @@ class wechatPay(object):
         xmlmsg = xmltodict.parse(res.text)
 
         if xmlmsg['xml']['return_code'] == 'SUCCESS':
-            sign = self.hashdata(xmlmsg['xml'], WECHAT_PAY_KEY)
-            print(sign)
-            print(xmlmsg['xml'])
-            if sign != xmlmsg['xml']['sign']:
-                raise PubErrorCustom("非法操作！")
+            # sign = self.hashdata(xmlmsg['xml'], WECHAT_PAY_KEY)
+            # print(sign)
+            # print(xmlmsg['xml'])
+            # if sign != xmlmsg['xml']['sign']:
+            #     raise PubErrorCustom("非法操作！")
 
             if xmlmsg['xml']['result_code'] == 'SUCCESS':
                 order = Order.objects.select_for_update().get(orderid=orderid)
