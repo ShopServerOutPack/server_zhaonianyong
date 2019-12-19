@@ -47,8 +47,7 @@ class OrderAPIView(viewsets.ViewSet):
     @Core_connector(isTransaction=True,isPasswd=True,isTicket=True)
     def txPayOrderQuery(self, request):
 
-        wechatPay().orderQuery(request.data_format['orderid'])
-        return None
+        return wechatPay().orderQuery(request.data_format['orderid'])
 
     @list_route(methods=['POST','GET'])
     def txPayCallback(self, request):

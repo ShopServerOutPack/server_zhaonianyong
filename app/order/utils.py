@@ -147,7 +147,8 @@ class wechatPay(object):
                 user = Users.objects.select_for_update().get(userid=order.userid)
                 user.isvip = '1'
                 user.save()
+                return {"data": True}
             else:
-                raise PubErrorCustom(xmlmsg['xml']['err_code_des'])
+                return {"data":False}
         else:
-            raise PubErrorCustom(xmlmsg['xml']['return_msg'])
+            return {"data":False}
