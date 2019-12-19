@@ -6,6 +6,7 @@ from lib.core.decorator.response import Core_connector
 
 from app.cache.serialiers import UserModelSerializerToRedis
 from app.user.models import Users
+from app.user.serialiers import UsersSerializers
 
 class UserAPIView(viewsets.ViewSet):
 
@@ -30,3 +31,11 @@ class UserAPIView(viewsets.ViewSet):
     def getUser(self, request):
 
         return {"data": UserModelSerializerToRedis(Users.objects.filter(rolecode=request.query_params_format['rolecode']),many=True).data}
+
+    @list_route(methods=['GET'])
+    @Core_connector(isTicket=True, isPasswd=True)
+    def getUserByWechat(self, request):
+
+        return {"data": UsersSerializers(Users.objects.get(userid=request.user['userid']),many=False).data}
+
+
