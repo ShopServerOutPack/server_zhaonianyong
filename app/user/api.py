@@ -39,3 +39,15 @@ class UserAPIView(viewsets.ViewSet):
         return {"data": UsersSerializers(Users.objects.get(userid=request.user['userid']),many=False).data}
 
 
+    @list_route(methods=['POST'])
+    @Core_connector(isTransaction=True,isPasswd=True,isTicket=True)
+    def updUser(self, request):
+
+        userid = request.data_format['userid']
+        user = Users.objects.get(userid=userid)
+        user.isvip = request.data_format["isvip"]
+        print(user.isvip)
+        user.save()
+        return None
+
+
