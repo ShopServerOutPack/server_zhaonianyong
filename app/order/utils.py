@@ -47,6 +47,7 @@ class wechatPay(object):
 
         data['sign'] = self.hashdata(data,WECHAT_PAY_KEY)
 
+        print(data)
         param = {'root': data}
         xml = xmltodict.unparse(param)
 
