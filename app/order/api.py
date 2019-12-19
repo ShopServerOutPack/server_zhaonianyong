@@ -30,14 +30,14 @@ class OrderAPIView(viewsets.ViewSet):
 
         order = Order.objects.create(**{
             "userid" : user.userid,
-            "amount" : 0.1,
-            "payamount":0.1
+            "amount" : 198,
+            "payamount": 198
         })
 
         data = wechatPay().request({
             "out_trade_no" : order.orderid,
             "total_fee" : int(order.amount * 100),
-            "spbill_create_ip" : "192.168.0.1",
+            "spbill_create_ip" : request.META.get("HTTP_X_REAL_IP"),
             "openid": user.uuid
         })
 
